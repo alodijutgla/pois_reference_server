@@ -552,12 +552,10 @@ def lambda_handler(event, context):
                                 else:
                                     cmd.time_specified_flag = True
                                     cmd.pts_time = scte_35_dict['command']['pts_time']
-                                    cmd.pts_ticks = scte_35_dict['command']['pts_ticks']
                                     cmd.break_auto_return = True
                             else:
                                 cmd.time_specified_flag = True
                                 cmd.pts_time = scte_35_dict['command']['pts_time']
-                                cmd.pts_ticks = scte_35_dict['command']['pts_ticks']
                                 cmd.break_auto_return = True
 
                                 scte_duration_ticks = 2700000
@@ -605,7 +603,6 @@ def lambda_handler(event, context):
                             else:
                                 cmd.time_specified_flag = True
                                 cmd.pts_time = scte_35_dict['command']['pts_time']
-                                cmd.pts_ticks = scte_35_dict['command']['pts_ticks']
                                 cmd.break_auto_return = True
 
 
@@ -695,12 +692,10 @@ def lambda_handler(event, context):
                                     else:
                                         cmd.time_specified_flag = True
                                         cmd.pts_time = scte_35_dict['command']['pts_time']
-                                        cmd.pts_ticks = scte_35_dict['command']['pts_ticks']
                                         cmd.break_auto_return = True
                                 else:
                                     cmd.time_specified_flag = True
                                     cmd.pts_time = scte_35_dict['command']['pts_time']
-                                    cmd.pts_ticks = scte_35_dict['command']['pts_ticks']
                                     cmd.break_auto_return = True
 
                                     try:
