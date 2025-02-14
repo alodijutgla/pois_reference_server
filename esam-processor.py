@@ -16,6 +16,7 @@ LOGGER.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
+    global scte_duration
     LOGGER.info(event)
 
     # Properties supported for SCTE35 binary replace
