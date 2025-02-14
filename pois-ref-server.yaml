@@ -307,7 +307,7 @@ Resources:
               http = urllib3.PoolManager()
 
               # Manifest File containning URL's on github
-              cloudformation_manifest = "https://raw.githubusercontent.com/scunning1987/pois_reference_server/main/manifest.txt"
+              cloudformation_manifest = "https://raw.githubusercontent.com/alodijutgla/pois_reference_server/refs/heads/feature/test_removing-pts_ticks/manifest.txt"
 
               # Pull global env variable to variable
               bucket = os.environ['BUCKET']
