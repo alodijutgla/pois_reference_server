@@ -17,6 +17,8 @@ LOGGER.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     global scte_duration
+    scte_duration = 30.0  # Default duration to avoid unbound variable
+
     LOGGER.info(event)
 
     # Properties supported for SCTE35 binary replace
@@ -563,13 +565,16 @@ def lambda_handler(event, context):
                                 scte_duration = 30.00
                                 if scte_35_dict['info_section']['splice_command_type'] == 5:
                                     try:
-                                        scte_duration = scte_35_dict['command']['break_duration']
+                                        # scte_duration = scte_35_dict['command']['break_duration']
+                                        scte_duration = scte_35_dict.get('command', [{}])[0].get('break_duration', 30.0)
                                         scte_duration_ticks = scte_35_dict['command']['break_ticks']
                                     except:
                                         LOGGER.info("No duration field on segmentation descriptor")
                                 else:
                                     try:
-                                        scte_duration = scte_35_dict['descriptors'][0]['segmentation_duration']
+                                        # scte_duration = scte_35_dict['descriptors'][0]['segmentation_duration']
+                                        scte_duration = scte_35_dict.get('descriptors', [{}])[0].get('segmentation_duration', 30.0)
+
                                         scte_duration_ticks = scte_35_dict['descriptors'][0]['segmentation_duration_ticks']
                                     except:
                                         LOGGER.info("No duration field on segmentation descriptor")
