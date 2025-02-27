@@ -6,13 +6,13 @@ import logging
 import math
 import os
 import xmltodict
-import threefive
-from threefive import Cue
+import threefive3
+from threefive3 import Cue
 import copy
 import binascii
 
 LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.INFO)
+LOGGER.setLevel(logging.DEBUG)
 
 
 def lambda_handler(event, context):
@@ -397,7 +397,7 @@ def lambda_handler(event, context):
 
         # Parse SCTE35 first
         try:
-            scte_35_cue = threefive.Cue(sig_binary_data)
+            scte_35_cue = threefive3.Cue(sig_binary_data)
             scte_35_cue.decode()
             scte_35_dict = scte_35_cue.get()
         except:
@@ -545,8 +545,8 @@ def lambda_handler(event, context):
                             #
                             # Build SCTE35 signal
                             #
-                            cue = threefive.Cue()
-                            cmd = threefive.TimeSignal()
+                            cue = threefive3.Cue()
+                            cmd = threefive3.TimeSignal()
 
                             if "splice_immediate_flag" in scte_35_dict['command'].keys():
                                 if scte_35_dict['command']['splice_immediate_flag'] == True:
@@ -581,9 +581,9 @@ def lambda_handler(event, context):
 
                             cue.command = cmd
                             cue.info_section.pts_adjustment = scte_35_dict['info_section']['pts_adjustment']
-                            cue.info_section.pts_adjustment_ticks = scte_35_dict['info_section']['pts_adjustment_ticks']
+                            # cue.info_section.pts_adjustment_ticks = scte_35_dict['info_section']['pts_adjustment_ticks']
 
-                            tsdescriptor = threefive.SegmentationDescriptor(None)
+                            tsdescriptor = threefive3.SegmentationDescriptor(None)
                             tsdescriptor.provider_avail_id = 1
                             tsdescriptor.segmentation_event_id = 1
                             tsdescriptor.segmentation_duration_flag = True
@@ -601,7 +601,7 @@ def lambda_handler(event, context):
                             tsdescriptor.sub_segment_num = 0
                             tsdescriptor.sub_segments_expected = 0
 
-                            cmd=threefive.TimeSignal()
+                            cmd=threefive3.TimeSignal()
 
                             if scte_35_dict['command']['splice_immediate_flag'] == True:
                                 cmd.splice_immediate_flag = True
@@ -622,7 +622,7 @@ def lambda_handler(event, context):
                             except Exception as e:
                                 segmentation_event_id_scte = str(int(time.time()/1000))
 
-                            dscrptr = threefive.SegmentationDescriptor(None)
+                            dscrptr = threefive3.SegmentationDescriptor(None)
                             dscrptr.tag = 2
                             dscrptr.descriptor_length = 23
                             dscrptr.name = "Segmentation Descriptor"
@@ -687,8 +687,8 @@ def lambda_handler(event, context):
                                 scte_35_dict['descriptors'].clear()
                                 scte_35_dict['descriptors'] = [new_descriptor]
 
-                                cue = threefive.Cue()
-                                cmd = threefive.TimeSignal()
+                                cue = threefive3.Cue()
+                                cmd = threefive3.TimeSignal()
 
 
                                 if "splice_immediate_flag" in scte_35_dict['command'].keys():
@@ -721,7 +721,7 @@ def lambda_handler(event, context):
                                 except Exception as e:
                                     segmentation_event_id_scte = str(int(time.time()/1000))
 
-                                dscrptr = threefive.SegmentationDescriptor(None)
+                                dscrptr = threefive3.SegmentationDescriptor(None)
                                 dscrptr.tag = 2
                                 dscrptr.descriptor_length = 23
                                 dscrptr.name = "Segmentation Descriptor"
@@ -858,10 +858,14 @@ def lambda_handler(event, context):
     # convert payload to xml for return
     spn_xml = xmltodict.unparse(spn, short_empty_elements=True, pretty=True)
 
-    return {
+    response = {
         'statusCode': 200,
         "headers": {
             "Content-Type": "application/xml",
         },
         'body': spn_xml
     }
+
+    LOGGER.info(response)
+    return response
+
