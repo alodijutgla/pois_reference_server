@@ -483,6 +483,14 @@ def lambda_handler(event, context):
                             custom_status_code['@classCode'] = 0
                             custom_status_code['core:Note'] = custom_status_code_rule_match
 
+                        elif rule_type == "replace":
+                            action = "replace"
+
+                            sig_binary_data = "/DARAAAAAAAAAP/wAAAAAHpPv/8="
+                            LOGGER.info("SCTE35 SPLICE NULL Hardcoded: %s " % (sig_binary_data))
+                            custom_status_code['@classCode'] = 0
+                            custom_status_code['core:Note'] = "Hardcoded Splice Null for testing purposes"
+
                         else: # replace
                             # iterate through replace_params and modify scte35 dict
                             action = "replace"
