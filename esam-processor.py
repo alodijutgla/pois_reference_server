@@ -479,17 +479,18 @@ def lambda_handler(event, context):
                             action = "delete"
                             scte35notdeleted = False
 
-                            custom_status_code_rule_match = "matched rule %r" % (str(r))
+                            sig_binary_data = "/DAlAAGvTj6rAP/wFAVZU3zbf+//9TV1Uv4Ap3rdAAEBAQAA5U1xYA=="
+                            LOGGER.info("Action DELETE. SCTE35 Hardcoded to: %s " % (sig_binary_data))
                             custom_status_code['@classCode'] = 0
-                            custom_status_code['core:Note'] = custom_status_code_rule_match
+                            custom_status_code['core:Note'] = "Hardcoded SCTE35 for testing purposes"
 
                         elif rule_type == "replace":
                             action = "replace"
 
-                            sig_binary_data = "/DARAAAAAAAAAP/wAAAAAHpPv/8="
-                            LOGGER.info("SCTE35 SPLICE NULL Hardcoded: %s " % (sig_binary_data))
+                            sig_binary_data = "/DAlAAGvTj6rAP/wFAVZU3zbf+//9TV1Uv4Ap3rdAAEBAQAA5U1xYA=="
+                            LOGGER.info("Action REPLACE. SCTE35 Hardcoded to: %s " % (sig_binary_data))
                             custom_status_code['@classCode'] = 0
-                            custom_status_code['core:Note'] = "Hardcoded Splice Null for testing purposes"
+                            custom_status_code['core:Note'] = "Hardcoded SCTE35 for testing purposes"
 
                         else: # replace
                             # iterate through replace_params and modify scte35 dict
@@ -779,6 +780,10 @@ def lambda_handler(event, context):
                                 custom_status_code['@classCode'] = 0
                                 custom_status_code['core:Note'] = "No rule match at POIS, using default behavior"
 
+                                sig_binary_data = "/DAlAAGvTj6rAP/wFAVZU3zbf+//9TV1Uv4Ap3rdAAEBAQAA5U1xYA=="
+                                LOGGER.info(
+                                    "Action DEFAULT_BEHAVIOR: %s. SCTE35 Hardcoded to: %s " % (action, sig_binary_data))
+
 
                         # for scte_descriptor in descriptor_priority_list:
 
@@ -791,10 +796,17 @@ def lambda_handler(event, context):
                             custom_status_code['@classCode'] = 0
                             custom_status_code['core:Note'] = "No rule match at POIS, using default behavior"
 
+                            sig_binary_data = "/DAlAAGvTj6rAP/wFAVZU3zbf+//9TV1Uv4Ap3rdAAEBAQAA5U1xYA=="
+                            LOGGER.info(
+                                "Action DEFAULT_BEHAVIOR: %s. SCTE35 Hardcoded to: %s " % (action, sig_binary_data))
+
                     else:
                         action = dynamodb_to_json['default_behavior']
                         custom_status_code['@classCode'] = 0
                         custom_status_code['core:Note'] = "No rule match at POIS, using default behavior"
+
+                        sig_binary_data = "/DAlAAGvTj6rAP/wFAVZU3zbf+//9TV1Uv4Ap3rdAAEBAQAA5U1xYA=="
+                        LOGGER.info("Action DEFAULT_BEHAVIOR: %s. SCTE35 Hardcoded to: %s " % (action, sig_binary_data))
 
                     scte35notdeleted = False
 
@@ -804,9 +816,9 @@ def lambda_handler(event, context):
     ##
     LOGGER.info("action type : %s " % (action))
     if action == "delete":
-        resp_signal = spn_delete()
+        resp_signal = spn_replace(sig_binary_data)
     elif action == "noop":
-        resp_signal = spn_noop()
+        resp_signal = spn_replace(sig_binary_data)
     elif action == "replace":
         resp_signal = spn_replace(sig_binary_data)
 
